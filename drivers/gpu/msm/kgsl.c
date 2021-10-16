@@ -5004,7 +5004,7 @@ int kgsl_device_platform_probe(struct kgsl_device *device)
 	}
 
 	status = devm_request_irq(device->dev, device->pwrctrl.interrupt_num,
-				  kgsl_irq_handler, IRQF_TRIGGER_HIGH,
+				  kgsl_irq_handler, IRQF_TRIGGER_HIGH | IRQF_PERF_SECOND_AFFINE,
 				  device->name, device);
 	if (status) {
 		KGSL_DRV_ERR(device, "request_irq(%d) failed: %d\n",
@@ -5224,7 +5224,7 @@ static int __init kgsl_core_init(void)
 		goto err;
 	}
 
-	sched_setscheduler(kgsl_driver.worker_thread, SCHED_FIFO, &param);
+	sched_setscheduler(kgsl_driver.worker_thread, SCHED_RR, &param);
 
 	kgsl_events_init();
 
